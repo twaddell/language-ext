@@ -1,5 +1,4 @@
 ﻿using System;
-using LanguageExt;
 using Xunit;
 using static LanguageExt.Prelude;
 
@@ -36,6 +35,7 @@ namespace LanguageExt.Tests
 
             Assert.True(person2.Appts[2].State == ApptState.Arrived);
         }
+
     }
 
     [WithLens]

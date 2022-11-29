@@ -13,6 +13,71 @@
         /// </summary>
         public static Prism<A, B> prism<A, B>(Lens<A, Option<B>> la) => 
             Prism<A, B>.New(la);
+        
+        /// <summary>
+        /// Sequentially composes a lens and a prism
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Lens<A, B> la, Prism<B, C> pb) =>
+            Prism<A, C>.New(
+                Get: a => la.Get(a).Apply(pb.Get),
+                Set: v => la.Update(pb.SetF(v)));
+
+        /// <summary>
+        /// Sequentially composes a prism and a lens
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Prism<A, B> pa, Lens<B, C> lb) =>
+            Prism<A, C>.New(
+                Get: a => pa.Get(a).Map(lb.Get),
+                Set: v => pa.Update(lb.SetF(v)));
+
+        /// <summary>
+        /// Sequentially composes a prism and an isomorphism
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Prism<A, B> pa, Isomorphism<B, C> ib) =>
+            Prism<A, C>.New(
+                Get: a => pa.Get(a).Map(ib.Get),
+                Set: v => pa.Update(_ => ib.Set(v)));
+
+        /// <summary>
+        /// Sequentially composes an isomorphism and a prism
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Isomorphism<A, B> ia, Prism<B, C> pb) =>
+            Prism<A, C>.New(
+                Get: a => pb.Get(ia.Get(a)),
+                Set: v => ia.Update(pb.SetF(v)));
+
+        // <summary>
+        /// Sequentially composes a lens and an epimorphism
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Lens<A, B> la, Epimorphism<B, C> eb) =>
+            Prism<A, C>.New(
+                Get: a => la.ToPrism().Get(a).Bind(eb.Get),
+                Set: v => la.Update(_ => eb.Set(v)));
+
+        /// <summary>
+        /// Sequentially composes an epimorphism and a lens
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Epimorphism<A, B> ea, Lens<B, C> lb) =>
+            Prism<A, C>.New(
+                Get: a => ea.Get(a)
+                            .Map(lb.Get),
+                Set: v => ea.Update(lb.SetF(v)));
+
+        /// <summary>
+        /// Sequentially composes a prism and an epimorphism
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Prism<A, B> pa, Epimorphism<B, C> eb) =>
+            Prism<A, C>.New(
+                Get: a => pa.Get(a).Bind(eb.Get),
+                Set: v => pa.Update(_ => eb.Set(v)));
+
+        /// <summary>
+        /// Sequentially composes an epimorphism and a prism
+        /// </summary>
+        public static Prism<A, C> prism<A, B, C>(Epimorphism<A, B> ea, Prism<B, C> pb) =>
+            Prism<A, C>.New(
+                Get: a => ea.Get(a).Bind(pb.Get),
+                Set: v => ea.Update(pb.SetF(v)));
 
         /// <summary>
         /// Sequentially composes two prisms

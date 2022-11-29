@@ -1,6 +1,4 @@
-﻿using System;
-using LanguageExt;
-using Xunit;
+﻿using Xunit;
 using static LanguageExt.Prelude;
 
 namespace LanguageExt.Tests
@@ -65,7 +63,6 @@ namespace LanguageExt.Tests
 
             Assert.Equal(expected, actual);
         }
-
     }
     
     [Record]

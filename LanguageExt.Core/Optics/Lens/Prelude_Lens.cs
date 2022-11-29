@@ -79,5 +79,21 @@ namespace LanguageExt
             Lens<A, K>.New(
                 Get: a => lj.Get(li.Get(lh.Get(lg.Get(lf.Get(le.Get(ld.Get(lc.Get(lb.Get(la.Get(a)))))))))),
                 Set: v => la.Update(lb.Update(lc.Update(ld.Update(le.Update(lf.Update(lg.Update(lh.Update(li.Update(lj.SetF(v)))))))))));
+
+        /// <summary>
+        /// Sequentially composes a lens and an isomorphism
+        /// </summary>
+        public static Lens<A, C> lens<A, B, C>(Lens<A, B> la, Isomorphism<B, C> ib) =>
+            Lens<A, C>.New(
+                Get: a => ib.Get(la.Get(a)),
+                Set: v => la.Update(_ => ib.Set(v)));
+
+        /// <summary>
+        /// Sequentially composes an isomorphism and a lens
+        /// </summary>
+        public static Lens<A, C> lens<A, B, C>(Isomorphism<A, B> ia, Lens<B, C> lb) =>
+            Lens<A, C>.New(
+                Get: a => lb.Get(ia.Get(a)),
+                Set: v => ia.Update(lb.SetF(v)));
     }
 }

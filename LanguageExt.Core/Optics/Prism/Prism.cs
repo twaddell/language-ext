@@ -3,7 +3,7 @@
     public static class Prism
     {
         /// <summary>
-        /// Identity lens
+        /// Identity prism
         /// </summary>
         public static Prism<A, A> identity<A>() =>
             Prism<A, A>.New(
