@@ -10,15 +10,15 @@ namespace LanguageExt
         {
             public static Prism<LanguageExt.Option<A>, A> some
                 => Prism<LanguageExt.Option<A>, A>.New(
-                    Get: a => a,
-                    Set: a => _ => Some(a)
+                    Get: option => option,
+                    Set: a => _ => a
                 );
 
             public static Prism<LanguageExt.Option<A>, Unit> none
                 => Prism<LanguageExt.Option<A>, Unit>.New(
-                    Get: a => a.Match(
-                        Some: _ => LanguageExt.Option<Unit>.None,
-                        None: () => Unit.Default),
+                    Get: option => option.Match(
+                        Some: _ => None,
+                        None: () => Some(Unit.Default)),
                     Set: _ => _ => None
                 );
         }
@@ -27,14 +27,14 @@ namespace LanguageExt
         {
             public static Prism<LanguageExt.Either<L, R>, L> left
                 => Prism<LanguageExt.Either<L, R>, L>.New(
-                    Get: a => a.Match(Left: Some, Right: _ => None),
-                    Set: a => _ => Left(a)
+                    Get: either => either.Match(Left: Some, Right: _ => None),
+                    Set: l => _ => Left(l)
                 );
 
             public static Prism<LanguageExt.Either<L, R>, R> right
                 => Prism<LanguageExt.Either<L, R>, R>.New(
-                    Get: a => a.Match(Left: _ => None, Right: Some),
-                    Set: a => _ => Right(a)
+                    Get: either => either.Match(Left: _ => None, Right: Some),
+                    Set: r => _ => Right(r)
                 );
         }
 
@@ -42,13 +42,13 @@ namespace LanguageExt
         {
             public static Prism<LanguageExt.Fin<A>, Error> fail
                 => Prism<LanguageExt.Fin<A>, Error>.New(
-                    Get: a => a.Match(Fail: Some, Succ: _ => None),
-                    Set: a => _ => LanguageExt.Fin<A>.Fail(a)
+                    Get: fin => fin.Match(Fail: Some, Succ: _ => None),
+                    Set: err => _ => LanguageExt.Fin<A>.Fail(err)
                 );
 
             public static Prism<LanguageExt.Fin<A>, A> succ
                 => Prism<LanguageExt.Fin<A>, A>.New(
-                    Get: a => a.Match(Fail: _ => None, Succ: Some),
+                    Get: fin => fin.Match(Fail: _ => None, Succ: Some),
                     Set: a => _ => LanguageExt.Fin<A>.Succ(a)
                 );
         }
@@ -58,14 +58,14 @@ namespace LanguageExt
         {
             public static Prism<LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>, FAIL> fail
                 => Prism<LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>, FAIL>.New(
-                    Get: a => a.Match(Fail: Some, Succ: _ => None),
-                    Set: a => _ => LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>.Fail(a)
+                    Get: validation => validation.Match(Fail: Some, Succ: _ => None),
+                    Set: f => _ => LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>.Fail(f)
                 );
 
             public static Prism<LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS> success
                 => Prism<LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>, SUCCESS>.New(
-                    Get: a => a.Match(Fail: _ => None, Succ: Some),
-                    Set: a => _ => LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>.Success(a)
+                    Get: validation => validation.Match(Fail: _ => None, Succ: Some),
+                    Set: s => _ => LanguageExt.Validation<MonoidFail, FAIL, SUCCESS>.Success(s)
                 );
         }
     }
